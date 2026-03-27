@@ -1,5 +1,4 @@
-FROM node:18
-
+FROM node:20
 WORKDIR /app
 
 # ---------- Backend ----------
@@ -15,12 +14,11 @@ RUN npm install
 COPY lost-found-frontend .
 RUN npm run build
 
-# ---------- Serve frontend via backend ----------
-# copy build into backend public folder
+# ---------- Move frontend build into backend ----------
 RUN mkdir -p /app/backend/public
 RUN cp -r /app/frontend/build/* /app/backend/public/
 
-# ---------- Final run ----------
+# ---------- Run backend ----------
 WORKDIR /app/backend
 
 EXPOSE 5000
