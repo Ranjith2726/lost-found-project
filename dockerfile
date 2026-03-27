@@ -17,8 +17,8 @@ COPY lost-found-frontend .
 # install concurrently
 RUN npm install -g concurrently
 
+# Render uses ONE port → we use 3000
 EXPOSE 3000
 
-CMD concurrently ^
-"cd /app/backend && node index.js" ^
-"cd /app/frontend && npm run dev -- --host 0.0.0.0"
+# run both
+CMD sh -c "cd /app/backend && node index.js & cd /app/frontend && npm run dev -- --host 0.0.0.0 --port 3000"
