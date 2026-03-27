@@ -1,4 +1,5 @@
 FROM node:20
+
 WORKDIR /app
 
 # ---------- Backend ----------
@@ -12,15 +13,12 @@ WORKDIR /app/frontend
 COPY lost-found-frontend/package*.json ./
 RUN npm install
 COPY lost-found-frontend .
-RUN npm run build
 
-# ---------- Move frontend build into backend ----------
-RUN mkdir -p /app/backend/public
-RUN cp -r /app/frontend/build/* /app/backend/public/
+# install concurrently
+RUN npm install -g concurrently
 
-# ---------- Run backend ----------
-WORKDIR /app/backend
+EXPOSE 3000
 
-EXPOSE 5000
-
-CMD ["npm", "start"]
+CMD concurrently ^
+"cd /app/backend && node index.js" ^
+"cd /app/frontend && npm run dev -- --host 0.0.0.0"
